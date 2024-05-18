@@ -1,7 +1,7 @@
 {
   "id": "antispy",
   "name": "AntiSpy",
-  "description": "This is a template for Unifier plugins.",
+  "description": "Data scraper detection plugin",
   "version": "v1.0.0",
   "release": 0,
   "minimum": 45,
