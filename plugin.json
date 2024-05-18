@@ -1,16 +1,20 @@
 {
-  "id": "template",
-  "name": "Plugin Template",
+  "id": "antispy",
+  "name": "AntiSpy",
   "description": "This is a template for Unifier plugins.",
   "version": "v1.0.0",
   "release": 0,
-  "minimum": 36,
-  "services": [],
+  "minimum": 45,
+  "services": [
+    "content_protection"
+  ],
   "requirements": [],
   "shutdown": false,
   "modules": [
-    "template.py"
+    "antispy.py"
   ],
   "utils": [
+    "detector.py",
+    "antispy_content_protection.py"
   ]
 }
