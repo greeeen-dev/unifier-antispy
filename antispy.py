@@ -16,19 +16,36 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import discord
 from discord.ext import commands
-from utils import detector
+import importlib
 
-class Template(commands.Cog):
-    """A template cog written for unifier-plugin temmplate repo"""
+detector = importlib.import_module('utils.detector')
+
+class AntiSpy(commands.Cog):
+    """Extension to scan for scrapers on boot and on user join/leave"""
     
     def __init__(self,bot):
         self.bot = bot
+        if not hasattr(self.bot,'detector'):
+            self.bot.detector = detector.Detector(bot=self.bot)
+            self.bot.detector.scanall()
+            self.bot.loaded_plugins['antispy'].attach_detector(self.bot.detector)
 
-    @commands.command()
-    async def template(self,ctx):
-        await ctx.send('This is a template plugin!')
+    @commands.Cog.listener()
+    async def on_member_join(self,member):
+        await self.bot.loop.run_in_executor(None,lambda:self.bot.detector.check(member))
+
+    @commands.Cog.listener()
+    async def on_member_leave(self, member):
+        await self.bot.loop.run_in_executor(None, lambda: self.bot.detector.scan(member.guild))
+
+    @commands.command(hidden=True)
+    async def refresh_detector(self,ctx):
+        importlib.reload(detector)
+        self.bot.detector = detector.Detector(bot=self.bot)
+        self.bot.detector.scanall()
+        self.bot.loaded_plugins['antispy'].attach_detector(self.bot.detector)
+        await ctx.send('Refreshed scraper detector')
 
 def setup(bot):
-    bot.add_cog(Template(bot))
+    bot.add_cog(AntiSpy(bot))

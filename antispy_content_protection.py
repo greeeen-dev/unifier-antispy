@@ -16,11 +16,49 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-async def check(bot):
-    """If you need certain code to be ran before unload/reload,
-    write them here.
+import discord
+import revolt
+import guilded
+from detector import Detector
 
-    shutdown must be set to true and utils must include
-    [plugin_id]_check.py."""
+detector = Detector() # this is solely to make pycharm stop complaining
 
-    return
+async def attach_detector(detector_obj):
+    global detector
+    detector: Detector = detector_obj
+
+async def scan(message: discord.Message or revolt.Message or guilded.Message, data):
+    global detector
+
+    response = {
+        'unsafe': False,
+        'description': 'No suspicious content found',
+        'target': {},
+        'delete': [],
+        'restrict': {},
+        'data': {},
+        'public': True
+    }
+
+    if not detector.bot:
+        try:
+            detector = data['detector']
+        except:
+            pass
+
+    if detector.bot:
+        if message.guild.id in detector.infected.keys():
+            scraperlist = ''
+            for scraper in detector.infected[message.guild.id]:
+                if len(scraperlist)==0:
+                    scraperlist = f'- <@{scraper}>'
+                else:
+                    scraperlist = scraperlist + f'\n- <@{scraper}>'
+            response['unsafe'] = True
+            response['description'] = (
+                    'One or more scraper bots were detected in your server. Please ask your server moderators to'+
+                    'remove them immediately.\n'+scraperlist+'\n\nSource: kickthespy.pet'
+            )
+
+    response['data'] = {'detector':detector}
+    return response
