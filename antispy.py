@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import discord
 from discord.ext import commands
+from utils import detector
 
 class Template(commands.Cog):
     """A template cog written for unifier-plugin temmplate repo"""
