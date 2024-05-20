@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import discord
+import nextcord
 import revolt
 import guilded
 from detector import Detector
@@ -27,7 +27,7 @@ async def attach_detector(detector_obj):
     global detector
     detector: Detector = detector_obj
 
-async def scan(message: discord.Message or revolt.Message or guilded.Message, data):
+async def scan(message: nextcord.Message or revolt.Message or guilded.Message, data):
     global detector
 
     response = {

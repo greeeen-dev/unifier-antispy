@@ -4,7 +4,7 @@
   "description": "Data scraper detection plugin",
   "version": "v1.0.0",
   "release": 0,
-  "minimum": 45,
+  "minimum": 46,
   "services": [
     "content_protection"
   ],
